@@ -1,0 +1,9 @@
+{
+    "Observation": "Taken.",
+    "Inventory": "You are carrying: A jewel-encrusted egg You hear in the distance the chirping of a song bird.",
+    "Look": "Up a Tree You are about 10 feet above the ground nestled among some large branches. The nearest branch above you is above your reach. Beside you on the branch is a small bird's nest. You hear in the distance the chirping of a song bird.",
+    "Possible Actions": "down, take nest, take on egg, close nest, put down egg, put egg in nest, throw egg at nest",
+    "Situation": "You take egg. Taken. Up a Tree You are about 10 feet above the ground nestled among some large branches. The nearest branch above you is above your reach. Beside you on the branch is a small bird's nest. You hear in the distance the chirping of a song bird. You are carrying: A jewel-encrusted egg You hear in the distance the chirping of a song bird.",
+    "Explanation": "There's nothing useful left in the tree, so I should head back down.",
+    "Best Action": "down"
+}

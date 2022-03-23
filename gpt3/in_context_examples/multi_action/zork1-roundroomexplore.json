@@ -1,0 +1,20 @@
+{
+    "Observation": "Round Room This is a circular stone room with passages in all directions. Several of them have unfortunately been blocked by cave-ins.",
+    "Inventory": "You are carrying: A brass lantern (providing light) A sword",
+    "Look": "Round Room This is a circular stone room with passages in all directions. Several of them have unfortunately been blocked by cave-ins.",
+    "Possible Actions": "put out lantern, put down lantern, put down sword, put down all, throw lantern at passages, north, south, west, east, southeast.",
+    "Situation": "You go east. Round Room This is a circular stone room with passages in all directions. Several of them have unfortunately been blocked by cave-ins. You are carrying: A brass lantern (providing light) A sword.",
+    "Evaluation": {
+        "put out lantern": "Putting out the lantern that is providing light would make it hard to see. This is bad.",
+        "put down lantern": "Putting down the lantern would do nothing useful. This is bad.",
+        "put down sword": "Putting down the sword would leave me defenseless. This choice is bad.",
+        "put down all": "Putting down all my items would do nothing useful. This is bad.",
+        "throw lantern at passages": "Throwing the lantern might break my only light source. This is bad.",
+        "north": "Going north will take me somewhere unknown. This is neutral.",
+        "south": "Going south might lead me somewhere new. This is neutral.",
+        "west": "Going west will undo my previous action since I just went east. This is bad.",
+        "east": "Going east will take me somewhere new. This is neutral.",
+        "southeast": "Going southeast will take me somewhere else. This is neutral."
+    },
+    "Best Action": "east"
+}

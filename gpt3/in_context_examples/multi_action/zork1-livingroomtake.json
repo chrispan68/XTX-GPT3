@@ -1,0 +1,17 @@
+{
+    "Observation": "Living Room You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a large oriental rug in the center of the room. Above the trophy case hangs an elvish sword of great antiquity. A battery-powered brass lantern is on the trophy case.",
+    "Inventory": "You are empty-handed.",
+    "Look": "Living Room You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a large oriental rug in the center of the room. Above the trophy case hangs an elvish sword of great antiquity. A battery-powered brass lantern is on the trophy case.",
+    "Possible Actions": "turn on lantern, open case, take sword, take lantern, take all, push rug, east.",
+    "Situation": "You go west. Living Room You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a large oriental rug in the center of the room. Above the trophy case hangs an elvish sword of great antiquity. A battery-powered brass lantern is on the trophy case. You are empty-handed.",
+    "Evaluation": {
+        "turn on lantern": "Turning on the lantern would give me light, but I can already see. This option is neutral.",
+        "open case": "Opening the case could reveal something useful inside. This option is good.",
+        "take sword": "Taking the sword would give me a way to defend myself, so this seems good.",
+        "take lantern": "Taking the lantern would give me a portable light source which could come in handy. This seems good.",
+        "take all": "Both the sword and the lantern seem useful, taking both seems good.",
+        "push rug": "Pushing the rug could reveal something underneath. This is good.",
+        "east": "Going east would take me through the doorway. This option is neutral."
+    },
+    "Best Action": "take all"
+}

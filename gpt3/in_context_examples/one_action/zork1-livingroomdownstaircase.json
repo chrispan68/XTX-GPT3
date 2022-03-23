@@ -1,0 +1,8 @@
+{
+    "Observation": "The door reluctantly opens to reveal a rickety staircase descending into darkness.",
+    "Inventory": "You are carrying: A brass lantern A sword",
+    "Look": "Living Room You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a rug lying beside an open trap door.",
+    "Possible Actions": "down, turn on lantern, open case, close trap, put down lantern, put down sword, put down all, throw lantern at west, east",
+    "Situation": "You open trap. The door reluctantly opens to reveal a rickety staircase descending into darkness. Living Room You are in the living room. There is a doorway to the east, a wooden door with strange gothic lettering to the west, which appears to be nailed shut, a trophy case, and a rug lying beside an open trap door. You are carrying: A brass lantern A sword",
+    "Best Action": "down"
+}

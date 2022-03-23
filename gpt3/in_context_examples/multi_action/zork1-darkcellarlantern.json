@@ -1,0 +1,18 @@
+{
+    "Observation": "You have moved into a dark place. The trap door crashes shut, and you hear someone barring it.  It is pitch black. You are likely to be eaten by a grue. Your sword is glowing with a faint blue glow.",
+    "Inventory": "You are carrying: A brass lantern A sword",
+    "Look": "It is pitch black. You are likely to be eaten by a grue.",
+    "Possible Actions": "east, turn on lantern, put down lantern, put down sword, put down all, throw lantern at sword, north, south",
+    "Situation": "You go down. You have moved into a dark place. The trap door crashes shut, and you hear someone barring it.  It is pitch black. You are likely to be eaten by a grue. Your sword is glowing with a faint blue glow. You are carrying: A brass lantern A sword.",
+    "Evaluation": {
+        "east": "Going east without a light source might get me eaten by a grue. This is bad.",
+        "turn on lantern": "Turning on the lantern ould provide me with a light source so I can see. This choice is good.",
+        "put down lantern": "Putting down the lantern would lose my only light source. This is bad.",
+        "put down sword": "Putting down the sword would lose my only weapon. This is bad.",
+        "put down all": "There is no reason to put down all my items. This is bad.",
+        "throw lantern at sword": "Throwing the lantern at the sword might break the lantern, which is bad.",
+        "north": "Going north in the dark might get me eaten by the grue. This is bad.",
+        "south": "Going south in the dark is very dangerous because of the grue. This is bad."
+    }, 
+    "Best Action": "turn on lantern"
+}

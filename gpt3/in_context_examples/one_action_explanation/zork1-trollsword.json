@@ -1,0 +1,9 @@
+{
+    "Observation": "The Troll Room This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls. A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room. Your sword has begun to glow very brightly.",
+    "Inventory": "You are carrying: A brass lantern (providing light) A sword The troll's axe barely misses your ear.",
+    "Look": "The Troll Room This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls. A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room. The axe crashes against the rock, throwing sparks!",
+    "Possible Actions": "put out lantern, put down lantern, put down sword, put down all, hit troll with sword, give all sword, throw lantern at axe, give troll sword, give troll all, south",
+    "Situation": "You go north. The Troll Room This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls. A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room. Your sword has begun to glow very brightly. You are carrying: A brass lantern (providing light) A sword The troll's axe barely misses your ear.",
+    "Explanation": "The troll is blocking all the exits, so I must try to kill the troll.",
+    "Best Action": "hit troll with sword"
+}

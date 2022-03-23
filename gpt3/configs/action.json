@@ -1,0 +1,13 @@
+{
+    "Features": ["Situation", "Possible Actions", "Best Action"],
+    "Instruction": "You are an expert at playing text based games. Given a situation and some possible actions, choose the best action.",
+    "Example Filenames": [
+        "gpt3/in_context_examples/one_action/zork1-cellarexplore.json",
+        "gpt3/in_context_examples/one_action/zork1-livingroomdownstaircase.json", 
+        "gpt3/in_context_examples/one_action/zork1-uptreedown.json", 
+        "gpt3/in_context_examples/one_action/zork1-trollsword.json", 
+        "gpt3/in_context_examples/one_action/zork1-livingroomtake.json", 
+        "gpt3/in_context_examples/one_action/zork1-uptreetakeegg.json",
+        "gpt3/in_context_examples/one_action/zork1-darkcellarlantern.json"
+    ]
+}

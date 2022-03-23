@@ -1,0 +1,8 @@
+{
+    "Observation": "You have moved into a dark place. The trap door crashes shut, and you hear someone barring it.  It is pitch black. You are likely to be eaten by a grue. Your sword is glowing with a faint blue glow.",
+    "Inventory": "You are carrying: A brass lantern A sword",
+    "Look": "It is pitch black. You are likely to be eaten by a grue.",
+    "Possible Actions": "east, turn on lantern, put down lantern, put down sword, put down all, throw lantern at sword, north, south",
+    "Situation": "You go down. You have moved into a dark place. The trap door crashes shut, and you hear someone barring it.  It is pitch black. You are likely to be eaten by a grue. Your sword is glowing with a faint blue glow. You are carrying: A brass lantern A sword",
+    "Best Action": "turn on lantern"
+}

@@ -1,0 +1,9 @@
+{
+    "Observation": "The brass lantern is now on.  Cellar You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable.",
+    "Inventory": "You are carrying: A brass lantern (providing light) A sword",
+    "Look": "Cellar You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable.",
+    "Possible Actions": "put out lantern, put down lantern, put down sword, put down all, throw lantern at sword, north, south",
+    "Situation": "You turn on lantern. The brass lantern is now on.  Cellar You are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable. You are carrying: A brass lantern (providing light) A sword",
+    "Explanation": "I can choose any direction to explore in, so I'll go to the passageway north.",
+    "Best Action": "north"
+}

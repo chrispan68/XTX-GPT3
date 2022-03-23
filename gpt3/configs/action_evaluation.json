@@ -1,0 +1,9 @@
+{
+    "Features": ["Situation", "Possible Actions", "Evaluation"],
+    "Instruction": "You are an expert at playing text based games. Given a situation and some possible actions, evaluate whether each action is good, bad or neutral.",
+    "Example Filenames": [
+        "gpt3/in_context_examples/multi_action/zork1-livingroomtake.json", 
+        "gpt3/in_context_examples/multi_action/zork1-darkcellarlantern.json", 
+        "gpt3/in_context_examples/multi_action/zork1-roundroomexplore.json"
+    ]
+}
