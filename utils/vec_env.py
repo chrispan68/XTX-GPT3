@@ -62,6 +62,8 @@ def worker(remote, parent_remote, env):
                 remote.send(len(env.cache))
             elif cmd == 'get_unique_acts_size':
                 remote.send(len(env.unique_acts))
+            elif cmd == 'get_state':
+                remote.send(env.get_state())
             elif cmd == 'close':
                 env.close()
                 break
@@ -77,6 +79,7 @@ class VecEnv:
     def __init__(self, num_envs, env):
         self.closed = False
         self.num_envs = num_envs
+        self.game_name = env.game_name
         self.remotes, self.work_remotes = zip(
             *[Pipe() for _ in range(num_envs)])
         env.cache = Manager().dict()
@@ -229,6 +232,12 @@ class VecEnv:
     def get_traj_i(self, i: int):
         self._assert_not_closed()
         self.remotes[i].send(('get_traj', None))
+        result = self.remotes[i].recv()
+        return result
+    
+    def get_state(self, i: int):
+        self._assert_not_closed()
+        self.remotes[i].send(('get_state', None))
         result = self.remotes[i].recv()
         return result
 

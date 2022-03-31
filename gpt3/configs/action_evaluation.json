@@ -4,6 +4,7 @@
     "Example Filenames": [
         "gpt3/in_context_examples/multi_action/zork1-livingroomtake.json", 
         "gpt3/in_context_examples/multi_action/zork1-darkcellarlantern.json", 
-        "gpt3/in_context_examples/multi_action/zork1-roundroomexplore.json"
+        "gpt3/in_context_examples/multi_action/zork1-roundroomexplore.json",
+        "gpt3/in_context_examples/multi_action/zork1-trollroomhit.json"
     ]
 }

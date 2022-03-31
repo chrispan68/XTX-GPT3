@@ -2,12 +2,18 @@
 import argparse
 import random
 import logging
+import pickle
+from os.path import join as pjoin
+from os.path import exists as pexists
+from os import makedirs
+import json
 
 # Third party imports
 import jericho
 import torch
 import numpy as np
 import wandb
+import pandas as pd
 
 # Custom imports
 from agents import (
@@ -19,7 +25,8 @@ from agents import (
 from trainers import (
     DrrnTrainer,
     DrrnInvDynTrainer,
-    DrrnGraphInvDynTrainer
+    DrrnGraphInvDynTrainer,
+    DrrnInvDynEvaluator
 )
 
 from transformers import GPT2LMHeadModel, GPT2Config
@@ -40,6 +47,9 @@ def configure_logger(args):
     """
     Setup various logging channels (wandb, text files, etc.).
     """
+    if not pexists(args.output_dir):
+        makedirs(args.output_dir)
+        
     log_dir = args.output_dir
     wandb_on = args.wandb
 
@@ -225,7 +235,12 @@ def parse_args():
                         default=0,
                         type=int,
                         help='whether to replace sampling with argmax')
-
+    
+    # bottleneck evaluation args
+    parser.add_argument('--bottleneck_directory', type=str, required=True)
+    parser.add_argument('--gpt3_acts_filename', type=str, required=True)
+    parser.add_argument('--aggregate_results_filename',type=str, default='eval_gpt3/results.csv')
+    parser.add_argument('--gpt3_steps',type=int,required=True)
     return parser.parse_args()
 
 
@@ -251,6 +266,21 @@ def main():
         pdb.set_trace()
 
     # Setup envs
+    starting_state = pickle.load(open(pjoin(args.bottleneck_directory, 'env_state.pickle'), 'rb'))
+    starting_env = jericho.FrotzEnv(args.rom_path, seed=args.jericho_seed)
+    starting_env.set_state(starting_state)
+    starting_score = starting_env.get_score()
+    gpt3acts = json.load(open(args.gpt3_acts_filename, 'r'))
+    if 'Evaluation' in gpt3acts[0]:
+        prompting='multiaction'
+    else:
+        prompting='oneaction'
+    
+    for step in gpt3acts[:args.gpt3_steps]:
+        starting_env.step(step['Best Action'])
+    xtx_starting_score = starting_env.get_score()
+    starting_state = starting_env.get_state()
+    
     cache = dict()
     eval_env = JerichoEnv(args.rom_path,
                           args.env_step_limit,
@@ -260,7 +290,8 @@ def main():
                           cache=cache,
                           start_from_reward=args.start_from_reward,
                           start_from_wt=args.start_from_wt,
-                          log=log)
+                          log=log,
+                          starting_state=starting_state)
     envs = [
         JerichoEnv(args.rom_path,
                    args.env_step_limit,
@@ -270,53 +301,39 @@ def main():
                    seed=args.jericho_seed,
                    start_from_reward=args.start_from_reward,
                    start_from_wt=args.start_from_wt,
-                   log=log) for _ in range(args.num_envs)
+                   log=log,
+                   starting_state=starting_state) for _ in range(args.num_envs)
     ]
 
-    # Setup rl model
-    if args.model_name == defs.DRRN:
-        assert args.use_action_model == 0, "'use_action_model' needs to be OFF"
-        assert args.r_for == 0, "r_for needs to be zero when NOT using inverse dynamics."
-        assert args.use_il == 0, "no il should be used when running DRRN."
+    assert(args.model_name == defs.INV_DY) # Only supports INV_DYN for now.
 
-        envs = VecEnv(args.num_envs, eval_env)
-
-        agent = DrrnAgent(tb, log, args, envs, None)
-        trainer = DrrnTrainer(tb, log, agent, envs, eval_env, args)
-
-    elif args.model_name == defs.XTX:
-        assert args.use_il == args.use_action_model, "action model stuff should be on when using IL."
-        assert args.r_for > 0, "r_for needs to be ON when using inverse dynamics."
-        if args.il_use_dropout or args.il_use_only_dropout:
-            assert args.il_use_dropout != args.il_use_only_dropout, "cannot use two types of dropout at the same time."
-
-        envs = VecEnv(args.num_envs, eval_env)
-
-        config = GPT2Config(vocab_size=args.il_vocab_size, n_embd=args.tf_embedding_dim,
-                            n_layer=args.tf_num_layers, n_head=args.nhead, n_positions=args.il_max_context, n_ctx=args.il_max_context)
-        lm = GPT2LMHeadModel(config)
-        lm.train()
-        agent = DrrnGraphInvDynAgent(args, tb, log, envs, action_models=lm)
-        trainer = DrrnGraphInvDynTrainer(tb, log, agent, envs, eval_env, args)
-
-    elif args.model_name == defs.INV_DY:
+    if args.model_name == defs.INV_DY:
         assert args.r_for > 0, "r_for needs to be ON when using inverse dynamics."
         assert args.use_action_model == 0, "'use_action_model' needs to be OFF."
 
         envs = VecEnv(args.num_envs, eval_env)
 
         agent = DrrnInvDynAgent(args, None, tb, log, envs)
-        trainer = DrrnInvDynTrainer(tb, log, agent, envs, eval_env, args)
+        trainer = DrrnInvDynEvaluator(tb, log, agent, envs, eval_env, args)
 
     else:
         raise Exception("Unknown model type!")
 
-    if args.weight_file is not None and args.memory_file is not None:
-        agent.load(args.run_id, args.weight_file, args.memory_file)
-        log("Successfully loaded network and replay buffer from checkpoint!")
-        
+    agent.load_from_dir(args.bottleneck_directory)
+    
     try:
-        trainer.train()
+        scores = trainer.train()
+        column_names = ['game', 'prompting_type', 'bottleneck_dir', 'num_steps_gpt3', 'starting_score', 'xtx_starting_score', 'final_score', 'gpt3win', 'gpt3xtxwin']
+        data = []
+        for score in scores:
+            data.append([starting_env.bindings['name'], prompting, args.bottleneck_directory, args.gpt3_steps, starting_score, xtx_starting_score, score, 1 if (xtx_starting_score > starting_score) else 0, 1 if (score > starting_score) else 0])
+        data = pd.DataFrame(columns=column_names, data=data)
+        if pexists(args.aggregate_results_filename):
+            df_existing = pd.read_csv(args.aggregate_results_filename, index_col=0)
+            data = df_existing.append(data, ignore_index=True)
+        data.to_csv(args.aggregate_results_filename)
+            
+
     finally:
         for ps in envs.ps:
             ps.terminate()

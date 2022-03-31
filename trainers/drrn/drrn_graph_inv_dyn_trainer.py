@@ -2,11 +2,14 @@
 from typing import Dict, Union, Callable, List
 import time
 from os.path import join as pjoin
+from os import makedirs
 
 # Libraries
 from jericho.util import clean
 import wandb
 import torch
+import pickle
+import json
 
 # Custom Imports
 from trainers import DrrnInvDynTrainer
@@ -43,10 +46,17 @@ class DrrnGraphInvDynTrainer(DrrnInvDynTrainer):
         self.use_il_graph_sampler = args.use_il_graph_sampler
         self.use_il_buffer_sampler = args.use_il_buffer_sampler
         self.use_il = args.use_il
+        self.cache_bottlenecks = args.cache_bottlenecks
+        self.bottleneck_cache_path = args.bottleneck_cache_path
+        self.num_steps_bottleneck = args.num_steps_bottleneck
 
     def train(self):
         start = time.time()
         max_score = 0
+        self.first_step_at_score = 0
+        self.max_score_continuous = 0 # maximum score that updates every step instead of at the end of every episode
+        self.prev_score = [0 for _ in range(self.envs.num_envs)]
+        self.bottleneck_hashes = set()
 
         obs, infos, states, valid_ids, transitions = Drrn.setup_env(
             self, self.envs)
@@ -128,6 +138,45 @@ class DrrnGraphInvDynTrainer(DrrnInvDynTrainer):
             self.log('Obs{}: {} Inv: {} Desc: {}'.format(
                 self.steps, clean(next_ob), clean(next_info['inv']),
                 clean(next_info['look'])), condition=(i == 0))
+            
+            # Cache the bottleneck state
+            if self.cache_bottlenecks:
+                # If we improve past the previous max-score, we reset
+                if next_info['score'] > self.max_score_continuous:
+                    self.first_step_at_score = self.steps
+                
+                if (self.steps - self.first_step_at_score > self.num_steps_bottleneck) and (next_info['score'] > self.prev_score[i]) and (next_info['score'] == self.max_score_continuous):
+                    self.first_step_at_score = self.steps
+                    hsh = next_info['look'] + '\n' + next_info['inv'] + '\n' + str(next_info['score'])
+                    if not hsh in self.bottleneck_hashes:
+                        self.bottleneck_hashes.add(hsh)
+                        bottleneck_directory_name = pjoin(self.bottleneck_cache_path, self.envs.game_name, 'score{}_step{}'.format(next_info['score'], self.steps))
+                        makedirs(bottleneck_directory_name, exist_ok=True)
+
+                        # cache agent
+                        self.agent.save(self.steps, directory=bottleneck_directory_name)
+
+                        if self.use_il:
+                            # save locally
+                            torch.save(self.agent.action_models.state_dict(),
+                                    pjoin(bottleneck_directory_name, 'il_weights_{}.pt'.format(self.steps)))
+                        
+                        # cache game environment
+                        env_state = self.envs.get_state(i)
+                        pickle.dump(env_state, open(pjoin(bottleneck_directory_name, 'env_state.pickle'), 'wb'))
+
+                        # write to text info file
+                        bottleneck_info = {}
+                        bottleneck_info['Score'] = next_info['score']
+                        bottleneck_info['Step'] = self.steps
+                        bottleneck_info['Env ID'] = i
+                        bottleneck_info['Bottleneck Length'] = self.steps - self.first_step_at_score
+                        bottleneck_info['Look'] = next_info['look']
+                        bottleneck_info['Inv'] = next_info['inv']
+                        bottleneck_info['Obs'] = next_ob
+                        json.dump(bottleneck_info, open(pjoin(bottleneck_directory_name, 'info.json'), 'w'), indent=4)
+                self.prev_score[i] = next_info['score']
+                self.max_score_continuous = max(self.max_score_continuous, next_info['score'])
 
             transition = Transition(
                 state, action_ids[i], next_reward, next_state, next_valids[i], next_done)

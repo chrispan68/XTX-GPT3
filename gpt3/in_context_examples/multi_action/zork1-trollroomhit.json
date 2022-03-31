@@ -1,0 +1,20 @@
+{
+    "Observation": "The Troll Room This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls. A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room. Your sword has begun to glow very brightly.",
+    "Inventory": "You are carrying: A brass lantern (providing light) A sword The troll's axe barely misses your ear.",
+    "Look": "The Troll Room This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls. A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room. The axe crashes against the rock, throwing sparks!",
+    "Possible Actions": "put out lantern, put down lantern, put down sword, put down all, hit troll with sword, give all sword, throw lantern at axe, give troll sword, give troll all, south",
+    "Situation": "You go north. The Troll Room This is a small room with passages to the east and south and a forbidding hole leading west. Bloodstains and deep scratches (perhaps made by an axe) mar the walls. A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room. Your sword has begun to glow very brightly. You are carrying: A brass lantern (providing light) A sword The troll's axe barely misses your ear.",
+    "Evaluation": {
+        "put out lantern": "Putting out the lantern would not help us. This choice is bad",
+        "put down lantern": "Putting the lantern down does nothing. This is bad.",
+        "put down sword": "If I put down the sword it will leave me defenseless in front of the troll. This is bad.",
+        "put down all": "Putting down all my items will not help me survive the troll. This choice seems bad.",
+        "hit troll with sword": "Hitting the troll with the sword could kill the troll. This seems good.",
+        "give all sword": "Giving away my sword would leave me defenseless. This is bad.",
+        "throw lantern at axe": "Throwing my lantern at the axe could break the lantern. This choice is bad.",
+        "give troll sword": "Giving the troll the sword would give me no way to defend myself. This is bad.",
+        "give troll all": "Giving the troll all my items would most likely not do anything useful. This seems bad.",
+        "south": "Going south would not work since the troll is blocking all passages out of the room. This is bad."
+    },
+    "Best Action": "hit troll with sword"
+}

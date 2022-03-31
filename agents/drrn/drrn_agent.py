@@ -4,6 +4,7 @@ import traceback
 import pickle
 from os.path import join as pjoin
 from typing import Dict, Union, List, Callable
+import json
 
 # Libraries
 import torch
@@ -244,6 +245,23 @@ class DrrnAgent:
             self.log(f"Error loading model {e}")
             logging.error(traceback.format_exc())
             raise Exception("Didn't properly load model!")
+    
+    def load_from_dir(self, checkpoint_dir: str):
+        info_dict = json.load(open(pjoin(checkpoint_dir, "info.json"), 'r'))
+        step = str(info_dict['Step'])
+        try:
+            self.memory = pickle.load(
+                open(pjoin(checkpoint_dir, f"memory_{step}.pkl"), 'rb')
+            )
+            self.network.load_state_dict(
+                torch.load(pjoin(checkpoint_dir, f"weights_{step}.pt"),
+                map_location=device
+            ), strict=False)
+        
+        except Exception as e:
+            self.log(f"Error loading model {e}")
+            logging.error(traceback.format_exc())
+            raise Exception("Didn't properly load model!")
 
     def load_memory(self, run_id: str, memory_file: str):
         try:
@@ -258,21 +276,23 @@ class DrrnAgent:
             logging.error(traceback.format_exc())
             raise Exception("Didn't properly load replay memory!")
 
-    def save(self, step: int, traj: List = None):
+    def save(self, step: int, traj: List = None, directory: str = None):
         try:
+            if directory is None:
+                directory = wandb.run.dir
             # save locally
             pickle.dump(
                 self.memory,
-                open(pjoin(wandb.run.dir, 'memory_{}.pkl'.format(step)), 'wb'))
+                open(pjoin(directory, 'memory_{}.pkl'.format(step)), 'wb'))
             torch.save(self.network.state_dict(),
-                       pjoin(wandb.run.dir, 'weights_{}.pt'.format(step)))
+                       pjoin(directory, 'weights_{}.pt'.format(step)))
 
             if traj is not None:
                 pickle.dump(
                     traj, open(
-                        pjoin(wandb.run.dir, 'traj_{}.pkl'.format(step)), 'wb')
+                        pjoin(directory, 'traj_{}.pkl'.format(step)), 'wb')
                 )
-                wandb.save(pjoin(wandb.run.dir, 'traj_{}.pkl'.format(step)))
+                wandb.save(pjoin(directory, 'traj_{}.pkl'.format(step)))
 
             # upload to wandb
             wandb.save(pjoin(wandb.run.dir, 'weights_{}.pt'.format(step)))

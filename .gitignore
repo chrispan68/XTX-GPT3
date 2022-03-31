@@ -19,6 +19,7 @@ wandb_downloads/
 node_modules/
 graph_viz/graphs/
 local_files
+bottleneck_state_cache/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

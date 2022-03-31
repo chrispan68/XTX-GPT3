@@ -15,8 +15,11 @@ def post_process(completion, mode):
                 pass
         return act_evaluation_dict
     else:
-        lines = [x for x in completion.splitlines() if (not x.strip() == '')]
-        return lines[0].strip()
+        try:
+            lines = [x for x in completion.splitlines() if (not x.strip() == '')]
+            return lines[0].strip()
+        except:
+            return 'wait'
         
 def complete(prompt, mode, engine, temperature, presence_penalty):
     if engine == 'stupid':

@@ -19,10 +19,12 @@ class JerichoEnv:
                  start_from_reward=0,
                  start_from_wt=0,
                  log=None,
-                 args=None):
+                 args=None,
+                 starting_state=None):
         self.rom_path = rom_path
         self.env = FrotzEnv(rom_path, seed=seed)
         self.bindings = self.env.bindings
+        self.game_name = self.bindings['name']
         self.steps = 0
         self.step_limit = step_limit
         self.get_valid = get_valid
@@ -34,6 +36,7 @@ class JerichoEnv:
         self.on_trajectory = True
         self.start_from_reward = start_from_reward
         self.start_from_wt = start_from_wt
+        self.starting_state = starting_state
 
         self.log = log
         self.cache_hits = 0
@@ -41,6 +44,9 @@ class JerichoEnv:
         self.ngram_needs_update = False
         self.filter_drop_acts = args.filter_drop_acts
         self.args = args
+    
+    def get_state(self):
+        return self.env.get_state()
 
     def get_objects(self):
         desc2objs = self.env._identify_interactive_objects(
@@ -96,20 +102,25 @@ class JerichoEnv:
         return ob, reward, done, info
 
     def reset(self):
-        initial_ob, info = self.env.reset()
+        if self.starting_state:
+            self.env.set_state(self.starting_state)
+            initial_ob, _, _, info = self.env.step('look')
+            self.env.set_state(self.starting_state)
+        else:
+            initial_ob, info = self.env.reset()
 
-        rewards_encountered = 0
-        walkthrough = self.env.get_walkthrough()
+            rewards_encountered = 0
+            walkthrough = self.env.get_walkthrough()
 
-        for act in walkthrough:
-            if rewards_encountered >= self.start_from_reward:
-                break
-            initial_ob, reward, _, info = self.env.step(act)
-            if reward > 0:
-                rewards_encountered += 1
+            for act in walkthrough:
+                if rewards_encountered >= self.start_from_reward:
+                    break
+                initial_ob, reward, _, info = self.env.step(act)
+                if reward > 0:
+                    rewards_encountered += 1
 
-        for act in walkthrough[:self.start_from_wt]:
-            initial_ob, reward, _, info = self.env.step(act)
+            for act in walkthrough[:self.start_from_wt]:
+                initial_ob, reward, _, info = self.env.step(act)
 
         save = self.env.get_state()
         look, _, _, _ = self.env.step('look')
