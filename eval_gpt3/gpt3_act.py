@@ -5,8 +5,6 @@ from gpt3 import *
 import json
 import argparse
 
-openai_api_key = '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'
-
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--bottleneck_directory', type=str, required=True)
